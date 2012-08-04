@@ -1,0 +1,18 @@
+#!/bin/bash
+
+for f in `ls etc/*.config`;
+  do CONFIG="$CONFIG -config $f";
+done
+
+SYNC="-sync sync_mode nitrogen"
+
+## Include .beam files for site.
+PATHS="-pa ebin -pa deps/*/ebin -pa site/ebin"
+
+EVAL="-eval \"application:start(wordserver)\""
+
+
+CMD="erl $CONFIG $PATHS $SYNC $EVAL"
+
+echo $CMD
+exec $CMD
