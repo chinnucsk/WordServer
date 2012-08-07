@@ -1,5 +1,6 @@
 all: ebin/ 
-	(cd src;$(MAKE) all)
+	./rebar compile
+#	(cd src;$(MAKE) all)
 	(cd site;$(MAKE) all)
 
 edoc:
@@ -9,7 +10,8 @@ test:
 	(cd src;$(MAKE) test)
 
 clean:
-	(cd src;$(MAKE) clean)
+	./rebar clean
+#	(cd src;$(MAKE) clean)
 	(cd site;$(MAKE) clean)
 
 clean_plt:
