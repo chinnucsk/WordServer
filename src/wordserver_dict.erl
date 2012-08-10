@@ -80,22 +80,19 @@ init([]) ->
 %%--------------------------------------------------------------------
 handle_call({walk}, _From, State) ->
     %% Find the ones with no predecessor
-    walk_words(lists:map(fun(X) 
-                            -> {Letter, Index, From, EndOfWord} = X, 
-                               {Letter,Index,From,EndOfWord, ""} 
+    walk_words(lists:map(fun(X) -> {L, I, F, E} = X, 
+                                   {L, I, F, E, ""} 
                          end, ets:match_object(words, {'_','_', 0, 0}))),
     {reply, ok, State};
 handle_call(_Request, _From, State) ->
     Reply = ok,
     {reply, Reply, State}.
 
-walk_words([{Letter, Index, _From, 0, WordSoFar}|T]) ->
-%%    io:format("[~p ~p]~n",[Index, WordSoFar]),
-    walk_words(lists:map(fun(X) 
-                 -> {NewLetter, NewIndex, NewFrom, NewEndOfWord} = X, 
-                    {NewLetter, NewIndex, NewFrom, NewEndOfWord, WordSoFar ++ Letter} 
-              end, ets:match_object(words, {'_','_', Index, '_'})) ++ T);
-walk_words([{Letter, _Index, _From, 1, WordSoFar}|T]) ->
+walk_words([{Letter, Index, _, 0, WordSoFar}|T]) ->
+    walk_words(lists:map(fun(X) -> {L, I, F, E} = X, 
+                                   {L, I, F, E, WordSoFar ++ Letter} 
+                         end, ets:match_object(words, {'_','_', Index, '_'})) ++ T);
+walk_words([{Letter, _, _, 1, WordSoFar}|T]) ->
     io:format("~s~n",[WordSoFar ++ Letter]),
     walk_words(T);
 walk_words([]) ->
