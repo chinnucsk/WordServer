@@ -27,5 +27,5 @@ init([]) ->
     application:start(nprocreg),
     % start the Yaws application
     application:start(yaws),
-    {ok, { {one_for_one, 5, 10}, []} }.
+    {ok, { {one_for_one, 5, 10}, [?CHILD(wordserver_dict, worker)]} }.
 
